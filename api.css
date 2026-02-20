@@ -1,0 +1,316 @@
+/* ===== SEARCH WRAPPER (pojok kanan) ===== */
+.search-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin: 20px 0 30px;
+}
+
+.search-container {
+    display: flex;
+    background: rgba(255, 105, 180, 0.1);
+    border: 2px solid #ff69b4;
+    border-radius: 60px;
+    padding: 5px;
+    backdrop-filter: blur(5px);
+    max-width: 300px;
+    width: 100%;
+}
+
+.search-container input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 12px 20px;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+}
+
+.search-container input::placeholder {
+    color: #ffb6c1;
+}
+
+.search-container button {
+    background: linear-gradient(135deg, #ff69b4, #ff1493);
+    border: none;
+    border-radius: 60px;
+    width: 50px;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 0 15px #ff69b4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-container button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px #ff1493;
+}
+
+/* ===== LOADING SPINNER ===== */
+.loading-spinner {
+    display: none;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.loading-spinner.show {
+    display: flex;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 105, 180, 0.3);
+    border-top: 4px solid #ff1493;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ===== CARD GRID (sama seperti sebelumnya) ===== */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
+    margin: 40px 0;
+}
+
+.api-card {
+    background: black;
+    border: 2px solid #ff69b4;
+    border-radius: 25px;
+    padding: 25px;
+    box-shadow: 0 0 20px #ff69b4;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.api-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 35px #ff1493;
+    border-color: #ff1493;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 105, 180, 0.1);
+    padding: 12px 18px;
+    border-radius: 40px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255, 105, 180, 0.3);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.method {
+    background: #ff1493;
+    color: white;
+    padding: 6px 15px;
+    border-radius: 40px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    box-shadow: 0 0 10px #ff69b4;
+}
+
+.endpoint {
+    font-family: 'Courier New', monospace;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 6px 15px;
+    border-radius: 40px;
+    color: #ffb6c1;
+    border: 1px dashed #ff69b4;
+    font-size: 0.9rem;
+    word-break: break-word;
+}
+
+.card-body {
+    flex: 1;
+    margin: 10px 0 15px;
+}
+
+.card-body h3 {
+    color: #ffb6c1;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+.card-body p {
+    color: #ffccdd;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.card-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-detail {
+    background: linear-gradient(135deg, #ff69b4, #ff1493);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 0 15px #ff69b4;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.btn-detail:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 25px #ff1493;
+}
+
+/* ===== MODAL ===== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: linear-gradient(145deg, #0d0015, #1a001a);
+    border: 2px solid #ff69b4;
+    border-radius: 40px;
+    max-width: 700px;
+    width: 90%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 35px;
+    position: relative;
+    box-shadow: 0 0 50px #ff1493;
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    background: none;
+    border: none;
+    color: #ff69b4;
+    font-size: 2.5rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: 0.3s;
+}
+
+.close-modal:hover {
+    color: #ff1493;
+    transform: rotate(90deg);
+}
+
+.modal-content h2 {
+    font-size: 2rem;
+    background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+    padding-right: 40px;
+}
+
+.modal-content .method-badge {
+    display: inline-block;
+    background: #ff1493;
+    color: white;
+    padding: 6px 18px;
+    border-radius: 40px;
+    font-weight: bold;
+    margin-right: 12px;
+    box-shadow: 0 0 10px #ff69b4;
+}
+
+.modal-content .endpoint-badge {
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 18px;
+    border-radius: 40px;
+    color: #ffb6c1;
+    border: 1px dashed #ff69b4;
+}
+
+.modal-content h3 {
+    color: #ffb6c1;
+    margin: 25px 0 10px;
+}
+
+.modal-content ul {
+    list-style: none;
+    padding: 0;
+}
+
+.modal-content li {
+    margin: 12px 0;
+    padding-left: 30px;
+    position: relative;
+    color: #ffccdd;
+}
+
+.modal-content li:before {
+    content: "▹";
+    color: #ff69b4;
+    position: absolute;
+    left: 0;
+    font-size: 1.3rem;
+}
+
+.modal-content pre {
+    background: black;
+    border: 1px solid #ff69b4;
+    border-radius: 20px;
+    padding: 18px;
+    color: #ffb6c1;
+    overflow-x: auto;
+    font-size: 0.9rem;
+}
+
+/* Responsif */
+@media (max-width: 700px) {
+    .search-wrapper {
+        justify-content: center;
+    }
+    .search-container {
+        max-width: 100%;
+    }
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+}

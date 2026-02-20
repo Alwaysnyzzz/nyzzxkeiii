@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEI ASSISTENT · Brat API</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* ===== TEMA PINK NEON ===== */
+        .brat-card {
+            background: black;
+            border: 2px solid #ff69b4;
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 0 20px #ff69b4;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 30px;
+        }
+        .brat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 35px #ff1493;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,105,180,0.1);
+            padding: 12px 18px;
+            border-radius: 40px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,105,180,0.3);
+        }
+        .method {
+            background: #ff1493;
+            color: white;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 0 10px #ff69b4;
+        }
+        .endpoint {
+            font-family: 'Courier New', monospace;
+            background: rgba(0,0,0,0.5);
+            padding: 6px 18px;
+            border-radius: 40px;
+            color: #ffb6c1;
+            border: 1px dashed #ff69b4;
+        }
+        .card-body {
+            background: rgba(255,105,180,0.03);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .card-body h3 {
+            color: #ffb6c1;
+            font-size: 1.6rem;
+            margin-bottom: 12px;
+            text-shadow: 0 0 5px #ff69b4;
+        }
+        .card-body p {
+            color: #ffccdd;
+            line-height: 1.7;
+        }
+        .card-body code {
+            background: #330033;
+            color: #ffb6c1;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        .card-footer {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+        .btn-docs {
+            background: transparent;
+            border: 2px solid #ff69b4;
+            color: #ffb6c1;
+            padding: 10px 25px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-docs:hover {
+            background: rgba(255,105,180,0.15);
+            color: #ff1493;
+            border-color: #ff1493;
+            box-shadow: 0 0 15px #ff69b4;
+        }
+        .btn-test {
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 15px #ff69b4;
+        }
+        .btn-test:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px #ff1493;
+        }
+        .btn-test:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #444;
+            box-shadow: none;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(255,105,180,0.3);
+        }
+        .tab {
+            padding: 10px 25px;
+            border-radius: 40px;
+            background: transparent;
+            color: #ffb6c1;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid transparent;
+        }
+        .tab:hover { border-color: #ff69b4; color: #ff1493; }
+        .tab.active {
+            background: linear-gradient(45deg, #ff69b4, #ff1493);
+            color: white;
+            box-shadow: 0 0 20px #ff1493;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.show { display: flex; }
+        .modal-content {
+            background: linear-gradient(145deg, #0d0015, #1a001a);
+            border: 2px solid #ff69b4;
+            border-radius: 40px;
+            max-width: 550px;
+            width: 90%;
+            padding: 35px;
+            position: relative;
+            box-shadow: 0 0 40px #ff1493;
+        }
+        .close-modal {
+            position: absolute;
+            top: 20px; right: 25px;
+            background: none;
+            border: none;
+            color: #ff69b4;
+            font-size: 2.5rem;
+            cursor: pointer;
+        }
+        .close-modal:hover { color: #ff1493; }
+        .modal-content h2 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        .modal-content h4 { color: #ffb6c1; margin: 20px 0 10px; }
+        .modal-content p { color: #ffccdd; line-height: 1.7; }
+        .modal-content ul { list-style: none; padding: 0; }
+        .modal-content li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #ffb6c1;
+        }
+        .modal-content li:before {
+            content: "▹";
+            color: #ff69b4;
+            position: absolute;
+            left: 0;
+        }
+        .modal-content pre {
+            background: black;
+            border: 1px solid #ff69b4;
+            border-radius: 20px;
+            padding: 15px;
+            color: #ffb6c1;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="particles"></div>
+    <div class="wrapper">
+        <header>
+            <div class="logo-area">
+                <div class="logo-icon"><i class="fas fa-crown"></i></div>
+                <div class="logo-text">
+                    <h1>KEI ASSISTENT</h1>
+                    <p>pink neon · dokumentasi api</p>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="../index.html">Home</a>
+                <a href="../api.html">API</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../product.html">Product</a>
+                <a href="../donasi.html">Donasi</a>
+            </div>
+        </header>
+
+        <div class="dashboard-image">
+            <img src="../image/dashboard.jpg" alt="Dashboard">
+        </div>
+
+        <div class="tabs">
+            <a href="../api.html" class="tab">All</a>
+            <a href="image.html" class="tab">Image</a>
+            <a href="brat.html" class="tab active">Brat</a>
+            <a href="video.html" class="tab">Video</a>
+            <a href="downloader.html" class="tab">Downloader</a>
+        </div>
+
+        <div id="cardContainer"></div>
+
+        <footer>© 2025 KEI ASSISTENT</footer>
+    </div>
+
+    <div id="docsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModalBtn">&times;</button>
+            <h2 id="modalTitle"></h2>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/jnicol/particleground/jquery.particleground.min.js"></script>
+    <script src="../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            particleground(document.getElementById('particles'), {
+                dotColor: '#ffb6c1',
+                lineColor: '#ff69b4',
+                density: 12000
+            });
+
+            const endpoints = [
+                {
+                    method: 'GET',
+                    endpoint: '/bratgambar',
+                    title: 'Brat Gambar Generator',
+                    desc: 'Buat gambar teks bergaya brat. Parameter <code>text</code> wajib.',
+                    test: true,
+                    docs: {
+                        summary: 'Menghasilkan gambar PNG dengan teks di tengah.',
+                        params: [{ name: 'text', type: 'string', required: true, desc: 'Teks yang akan digambar (URL encoded).' }],
+                        example: '/bratgambar?text=Halo%20Dunia',
+                        response: 'Gambar PNG.'
+                    }
+                },
+                {
+                    method: 'GET',
+                    endpoint: '/bratv2',
+                    title: 'Brat V2 (Warna)',
+                    desc: 'Versi berwarna dengan parameter <code>text</code> dan <code>color</code>.',
+                    test: false,
+                    docs: {
+                        summary: 'Brat dengan latar gradien dan teks berwarna.',
+                        params: [
+                            { name: 'text', type: 'string', required: true, desc: 'Teks.' },
+                            { name: 'color', type: 'string', required: false, desc: 'Warna teks (nama atau hex).' }
+                        ],
+                        example: '/bratv2?text=Halo&color=red',
+                        response: 'Gambar PNG berwarna.'
+                    }
+                }
+            ];
+
+            const container = document.getElementById('cardContainer');
+            container.innerHTML = endpoints.map(e => `
+                <div class="brat-card">
+                    <div class="card-header">
+                        <span class="method">${e.method}</span>
+                        <span class="endpoint">${e.endpoint}</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>${e.title}</h3>
+                        <p>${e.desc}</p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn-docs" data-docs='${JSON.stringify(e)}'><i class="fas fa-book"></i> Dokumentasi</button>
+                        ${e.test ? 
+                            '<button class="btn-test test-brat"><i class="fas fa-paper-plane"></i> TEST ENDPOINT →</button>' : 
+                            '<button class="btn-test" disabled><i class="fas fa-clock"></i> Coming Soon</button>'}
+                    </div>
+                </div>
+            `).join('');
+
+            const modal = document.getElementById('docsModal');
+            const closeBtn = document.getElementById('closeModalBtn');
+            document.querySelectorAll('.btn-docs').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const data = JSON.parse(this.dataset.docs);
+                    document.getElementById('modalTitle').innerText = data.title;
+                    let paramsHtml = '';
+                    if (data.docs.params) {
+                        paramsHtml = '<h4>Parameter</h4><ul>';
+                        data.docs.params.forEach(p => {
+                            paramsHtml += `<li><code>${p.name}</code> (${p.type}) ${p.required ? '<span style="color:#ff69b4;">wajib</span>' : 'opsional'}: ${p.desc}</li>`;
+                        });
+                        paramsHtml += '</ul>';
+                    }
+                    document.getElementById('modalBody').innerHTML = `
+                        <p>${data.docs.summary}</p>
+                        ${paramsHtml}
+                        <h4>Contoh Request</h4><pre>${data.docs.example}</pre>
+                        <h4>Contoh Respons</h4><pre>${data.docs.response}</pre>
+                    `;
+                    modal.classList.add('show');
+                });
+            });
+
+            closeBtn.addEventListener('click', () => modal.classList.remove('show'));
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
+
+            document.querySelectorAll('.test-brat').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const text = prompt('Masukkan teks untuk brat:', 'Halo KEI');
+                    if (text) {
+                        const baseUrl = window.CONFIG?.API_BASE_URL || 'http://localhost:3000';
+                        window.open(baseUrl + '/bratgambar?text=' + encodeURIComponent(text), '_blank');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
